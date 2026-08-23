@@ -7,8 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Upload
+import androidx.compose.material.icons.filled.* // این ایمپورت همه آیکون‌ها از جمله CloudUpload را می‌آورد
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -40,16 +39,12 @@ fun SettingsScreen(navController: NavController) {
     var isLoading by remember { mutableStateOf(false) }
     var message by remember { mutableStateOf<String?>(null) }
 
-    val filePicker = rememberLauncherForActivityResult(
-        ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
+    val filePicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             scope.launch {
                 isLoading = true
                 try {
-                    val parsed = withContext(Dispatchers.IO) {
-                        ExcelParser(context).parse(it)
-                    }
+                    val parsed = withContext(Dispatchers.IO) { ExcelParser(context).parse(it) }
                     for (pl in parsed) {
                         val lessonId = db.lessonDao().insertLesson(pl.lesson)
                         val wordsWithLesson = pl.words.map { w -> w.copy(lessonId = lessonId) }
@@ -97,7 +92,7 @@ fun SettingsScreen(navController: NavController) {
                     ) {
                         if (isLoading) CircularProgressIndicator(Modifier.size(20.dp), color = Color.White)
                         else {
-                            Icon(Icons.Default.Upload, null)
+                            Icon(Icons.Default.CloudUpload, null) // اینجا اصلاح شد
                             Spacer(Modifier.width(8.dp))
                             Text("Choose Excel File")
                         }
@@ -112,11 +107,7 @@ fun SettingsScreen(navController: NavController) {
             Text("⏰ Daily Reminder", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = DeepNavy)
             Card {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                         Text("Enable Reminder")
                         Switch(
                             checked = settings.reminderEnabled,
