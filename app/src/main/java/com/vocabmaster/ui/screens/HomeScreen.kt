@@ -4,7 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.* // این ایمپورت همه آیکون‌های لازم را می‌آورد
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Assessment // اضافه شده برای اطمینان
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -83,7 +84,7 @@ fun HomeScreen(navController: NavController) {
                 MenuCard(Icons.Default.Warning, "Weak Words", "$weak to review", Color(0xFFC0392B), Modifier.weight(1f)) {
                     navController.navigate(Routes.WEAK_WORDS)
                 }
-                MenuCard(Icons.Default.Assessment, "Statistics", "Your progress", Color(0xFF27AE60), Modifier.weight(1f)) {
+                MenuCard(Icons.Filled.Assessment, "Statistics", "Your progress", Color(0xFF27AE60), Modifier.weight(1f)) {
                     navController.navigate(Routes.STATS)
                 }
             }
