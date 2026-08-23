@@ -7,7 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.* // این ایمپورت همه آیکون‌ها از جمله CloudUpload را می‌آورد
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Upload // اضافه شده برای اطمینان
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -92,7 +93,7 @@ fun SettingsScreen(navController: NavController) {
                     ) {
                         if (isLoading) CircularProgressIndicator(Modifier.size(20.dp), color = Color.White)
                         else {
-                            Icon(Icons.Default.CloudUpload, null) // اینجا اصلاح شد
+                            Icon(Icons.Filled.Upload, null) // اصلاح شد
                             Spacer(Modifier.width(8.dp))
                             Text("Choose Excel File")
                         }
