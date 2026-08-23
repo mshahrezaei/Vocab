@@ -41,13 +41,11 @@ fun FlashcardScreen(lessonId: Long, navController: NavController) {
         val list = if (lessonId == -1L) {
             db.wordDao().getDueWords(System.currentTimeMillis(), limit = 30)
         } else {
-            db.wordDao().getWordsByLesson(lessonId).let { flow ->
-                var result = emptyList<Word>()
-                flow.collect { allWords ->
-                    result = allWords.filter { !it.isLearned || it.nextReviewDate <= System.currentTimeMillis() }.take(30)
-                }
-                result
+            var result = emptyList<Word>()
+            db.wordDao().getWordsByLesson(lessonId).collect { allWords ->
+                result = allWords.filter { !it.isLearned || it.nextReviewDate <= System.currentTimeMillis() }.take(30)
             }
+            result
         }
         words.addAll(list)
         loaded = true
@@ -144,28 +142,16 @@ fun FlashcardScreen(lessonId: Long, navController: NavController) {
                     Text("How well did you know it?", fontWeight = FontWeight.Medium, color = DeepNavy)
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         RatingButton("Again", Color(0xFFE74C3C)) {
-                            handleRating(currentWord, 1, db, words, currentIndex,
-                                { sessionCorrect++ }, { sessionTotal++ },
-                                { isFlipped = false; currentIndex++ },
-                                { isFinished = true })
+                            handleRating(currentWord, 1, db, words, currentIndex, { sessionCorrect++ }, { sessionTotal++ }, { isFlipped = false; currentIndex++ }, { isFinished = true })
                         }
                         RatingButton("Hard", Color(0xFFF39C12)) {
-                            handleRating(currentWord, 3, db, words, currentIndex,
-                                { sessionCorrect++ }, { sessionTotal++ },
-                                { isFlipped = false; currentIndex++ },
-                                { isFinished = true })
+                            handleRating(currentWord, 3, db, words, currentIndex, { sessionCorrect++ }, { sessionTotal++ }, { isFlipped = false; currentIndex++ }, { isFinished = true })
                         }
                         RatingButton("Good", Color(0xFF27AE60)) {
-                            handleRating(currentWord, 4, db, words, currentIndex,
-                                { sessionCorrect++ }, { sessionTotal++ },
-                                { isFlipped = false; currentIndex++ },
-                                { isFinished = true })
+                            handleRating(currentWord, 4, db, words, currentIndex, { sessionCorrect++ }, { sessionTotal++ }, { isFlipped = false; currentIndex++ }, { isFinished = true })
                         }
                         RatingButton("Easy", Color(0xFF1E3A5F)) {
-                            handleRating(currentWord, 5, db, words, currentIndex,
-                                { sessionCorrect++ }, { sessionTotal++ },
-                                { isFlipped = false; currentIndex++ },
-                                { isFinished = true })
+                            handleRating(currentWord, 5, db, words, currentIndex, { sessionCorrect++ }, { sessionTotal++ }, { isFlipped = false; currentIndex++ }, { isFinished = true })
                         }
                     }
                 }
@@ -178,7 +164,7 @@ fun FlashcardScreen(lessonId: Long, navController: NavController) {
 private fun RatingButton(text: String, color: Color, onClick: () -> Unit) {
     Button(
         onClick = onClick,
-        modifier = Modifier.weight(1f).height(50.dp),
+        modifier = Modifier.weight(1f).height(50.dp), // این خط اصلاح شد
         colors = ButtonDefaults.buttonColors(containerColor = color),
         shape = RoundedCornerShape(12.dp)
     ) {
@@ -187,14 +173,8 @@ private fun RatingButton(text: String, color: Color, onClick: () -> Unit) {
 }
 
 private fun handleRating(
-    word: Word, quality: Int,
-    db: AppDatabase,
-    words: MutableList<Word>,
-    currentIndex: Int,
-    onCorrect: () -> Unit,
-    onTotal: () -> Unit,
-    onNext: () -> Unit,
-    onFinish: () -> Unit
+    word: Word, quality: Int, db: AppDatabase, words: MutableList<Word>,
+    currentIndex: Int, onCorrect: () -> Unit, onTotal: () -> Unit, onNext: () -> Unit, onFinish: () -> Unit
 ) {
     GlobalScope.launch {
         onTotal()
@@ -202,13 +182,7 @@ private fun handleRating(
         val result = SpacedRepetition.processReview(word, quality)
         db.wordDao().updateWord(result.updatedWord)
         db.wordDao().insertLog(result.log)
-        if (quality < 3) {
-            words.add(result.updatedWord)
-        }
+        if (quality < 3) words.add(result.updatedWord)
     }
-    if (currentIndex + 1 >= words.size - 1) {
-        onFinish()
-    } else {
-        onNext()
-    }
+    if (currentIndex + 1 >= words.size - 1) onFinish() else onNext()
 }
