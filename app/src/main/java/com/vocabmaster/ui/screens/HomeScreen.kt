@@ -1,11 +1,10 @@
 package com.vocabmaster.ui.screens
 
-import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.* // این ایمپورت همه آیکون‌های لازم را می‌آورد
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -34,10 +33,7 @@ fun HomeScreen(navController: NavController) {
         topBar = {
             TopAppBar(
                 title = { Text("VocabMaster", fontWeight = FontWeight.Bold) },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = DeepNavy,
-                    titleContentColor = Color.White
-                ),
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = DeepNavy, titleContentColor = Color.White),
                 actions = {
                     IconButton(onClick = { navController.navigate(Routes.SETTINGS) }) {
                         Icon(Icons.Default.Settings, "Settings", tint = Color.White)
@@ -47,23 +43,14 @@ fun HomeScreen(navController: NavController) {
         }
     ) { padding ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp),
+            modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = DeepNavy)
-            ) {
+            Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = DeepNavy)) {
                 Column(modifier = Modifier.padding(20.dp)) {
                     Text("Your Progress", color = SoftGold, fontSize = 14.sp, fontWeight = FontWeight.Medium)
                     Spacer(Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         StatItem("Learned", learned.toString(), SoftGold)
                         StatItem("Learning", learning.toString(), Color(0xFF87CEEB))
                         StatItem("New", newWords.toString(), Color(0xFF98D8C8))
@@ -84,7 +71,7 @@ fun HomeScreen(navController: NavController) {
             }
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                MenuCard(Icons.Default.MenuBook, "Lessons", "Browse all", BurntBrown, Modifier.weight(1f)) {
+                MenuCard(Icons.Default.List, "Lessons", "Browse all", BurntBrown, Modifier.weight(1f)) {
                     navController.navigate(Routes.LESSONS)
                 }
                 MenuCard(Icons.Default.Search, "Search", "Find words", DeepNavy, Modifier.weight(1f)) {
@@ -96,7 +83,7 @@ fun HomeScreen(navController: NavController) {
                 MenuCard(Icons.Default.Warning, "Weak Words", "$weak to review", Color(0xFFC0392B), Modifier.weight(1f)) {
                     navController.navigate(Routes.WEAK_WORDS)
                 }
-                MenuCard(Icons.Default.BarChart, "Statistics", "Your progress", Color(0xFF27AE60), Modifier.weight(1f)) {
+                MenuCard(Icons.Default.Assessment, "Statistics", "Your progress", Color(0xFF27AE60), Modifier.weight(1f)) {
                     navController.navigate(Routes.STATS)
                 }
             }
