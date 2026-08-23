@@ -141,48 +141,4 @@ fun FlashcardScreen(lessonId: Long, navController: NavController) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text("How well did you know it?", fontWeight = FontWeight.Medium, color = DeepNavy)
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        RatingButton("Again", Color(0xFFE74C3C)) {
-                            handleRating(currentWord, 1, db, words, currentIndex, { sessionCorrect++ }, { sessionTotal++ }, { isFlipped = false; currentIndex++ }, { isFinished = true })
-                        }
-                        RatingButton("Hard", Color(0xFFF39C12)) {
-                            handleRating(currentWord, 3, db, words, currentIndex, { sessionCorrect++ }, { sessionTotal++ }, { isFlipped = false; currentIndex++ }, { isFinished = true })
-                        }
-                        RatingButton("Good", Color(0xFF27AE60)) {
-                            handleRating(currentWord, 4, db, words, currentIndex, { sessionCorrect++ }, { sessionTotal++ }, { isFlipped = false; currentIndex++ }, { isFinished = true })
-                        }
-                        RatingButton("Easy", Color(0xFF1E3A5F)) {
-                            handleRating(currentWord, 5, db, words, currentIndex, { sessionCorrect++ }, { sessionTotal++ }, { isFlipped = false; currentIndex++ }, { isFinished = true })
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun RatingButton(text: String, color: Color, onClick: () -> Unit) {
-    Button(
-        onClick = onClick,
-        modifier = Modifier.weight(1f).height(50.dp), // این خط اصلاح شد
-        colors = ButtonDefaults.buttonColors(containerColor = color),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Text(text, color = Color.White, fontWeight = FontWeight.Bold)
-    }
-}
-
-private fun handleRating(
-    word: Word, quality: Int, db: AppDatabase, words: MutableList<Word>,
-    currentIndex: Int, onCorrect: () -> Unit, onTotal: () -> Unit, onNext: () -> Unit, onFinish: () -> Unit
-) {
-    GlobalScope.launch {
-        onTotal()
-        if (quality >= 3) onCorrect()
-        val result = SpacedRepetition.processReview(word, quality)
-        db.wordDao().updateWord(result.updatedWord)
-        db.wordDao().insertLog(result.log)
-        if (quality < 3) words.add(result.updatedWord)
-    }
-    if (currentIndex + 1 >= words.size - 1) onFinish() else onNext()
-}
+                        RatingButton("Again", Color(0xFF
