@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.filled.Assessment // اضافه شده برای اطمینان
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,6 +24,7 @@ import com.vocabmaster.ui.theme.*
 @Composable
 fun HomeScreen(navController: NavController) {
     val db = AppDatabase.getInstance(LocalContext.current)
+
     val learned by db.wordDao().countLearned().collectAsState(initial = 0)
     val learning by db.wordDao().countLearning().collectAsState(initial = 0)
     val newWords by db.wordDao().countNew().collectAsState(initial = 0)
@@ -33,58 +33,168 @@ fun HomeScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("VocabMaster", fontWeight = FontWeight.Bold) },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = DeepNavy, titleContentColor = Color.White),
+                title = {
+                    Text(
+                        "VocabMaster",
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = DeepNavy,
+                    titleContentColor = Color.White
+                ),
                 actions = {
-                    IconButton(onClick = { navController.navigate(Routes.SETTINGS) }) {
-                        Icon(Icons.Default.Settings, "Settings", tint = Color.White)
+                    IconButton(
+                        onClick = {
+                            navController.navigate(Routes.SETTINGS)
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.Settings,
+                            contentDescription = "Settings",
+                            tint = Color.White
+                        )
                     }
                 }
             )
         }
     ) { padding ->
+
         Column(
-            modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = DeepNavy)) {
-                Column(modifier = Modifier.padding(20.dp)) {
-                    Text("Your Progress", color = SoftGold, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = DeepNavy
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(20.dp)
+                ) {
+
+                    Text(
+                        "Your Progress",
+                        color = SoftGold,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+
                     Spacer(Modifier.height(8.dp))
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        StatItem("Learned", learned.toString(), SoftGold)
-                        StatItem("Learning", learning.toString(), Color(0xFF87CEEB))
-                        StatItem("New", newWords.toString(), Color(0xFF98D8C8))
-                        StatItem("Weak", weak.toString(), Color(0xFFFF9999))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        StatItem(
+                            "Learned",
+                            learned.toString(),
+                            SoftGold
+                        )
+
+                        StatItem(
+                            "Learning",
+                            learning.toString(),
+                            Color(0xFF87CEEB)
+                        )
+
+                        StatItem(
+                            "New",
+                            newWords.toString(),
+                            Color(0xFF98D8C8)
+                        )
+
+                        StatItem(
+                            "Weak",
+                            weak.toString(),
+                            Color(0xFFFF9999)
+                        )
                     }
                 }
             }
 
             Button(
-                onClick = { navController.navigate(Routes.REVIEW_TODAY) },
-                modifier = Modifier.fillMaxWidth().height(70.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = SoftGold),
+                onClick = {
+                    navController.navigate(Routes.REVIEW_TODAY)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(70.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = SoftGold
+                ),
                 shape = RoundedCornerShape(16.dp)
             ) {
-                Icon(Icons.Default.PlayArrow, null, tint = DeepNavy)
+
+                Icon(
+                    Icons.Default.PlayArrow,
+                    contentDescription = null,
+                    tint = DeepNavy
+                )
+
                 Spacer(Modifier.width(8.dp))
-                Text("Start Today's Review", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = DeepNavy)
+
+                Text(
+                    "Start Today's Review",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = DeepNavy
+                )
             }
 
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                MenuCard(Icons.Default.List, "Lessons", "Browse all", BurntBrown, Modifier.weight(1f)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+
+                MenuCard(
+                    icon = Icons.Default.List,
+                    title = "Lessons",
+                    subtitle = "Browse all",
+                    color = BurntBrown,
+                    modifier = Modifier.weight(1f)
+                ) {
                     navController.navigate(Routes.LESSONS)
                 }
-                MenuCard(Icons.Default.Search, "Search", "Find words", DeepNavy, Modifier.weight(1f)) {
+
+                MenuCard(
+                    icon = Icons.Default.Search,
+                    title = "Search",
+                    subtitle = "Find words",
+                    color = DeepNavy,
+                    modifier = Modifier.weight(1f)
+                ) {
                     navController.navigate(Routes.SEARCH)
                 }
             }
 
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                MenuCard(Icons.Default.Warning, "Weak Words", "$weak to review", Color(0xFFC0392B), Modifier.weight(1f)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+
+                MenuCard(
+                    icon = Icons.Default.Warning,
+                    title = "Weak Words",
+                    subtitle = "$weak to review",
+                    color = Color(0xFFC0392B),
+                    modifier = Modifier.weight(1f)
+                ) {
                     navController.navigate(Routes.WEAK_WORDS)
                 }
-                MenuCard(Icons.Filled.Assessment, "Statistics", "Your progress", Color(0xFF27AE60), Modifier.weight(1f)) {
+
+                MenuCard(
+                    icon = Icons.Default.BarChart,
+                    title = "Statistics",
+                    subtitle = "Your progress",
+                    color = Color(0xFF27AE60),
+                    modifier = Modifier.weight(1f)
+                ) {
                     navController.navigate(Routes.STATS)
                 }
             }
@@ -93,25 +203,77 @@ fun HomeScreen(navController: NavController) {
 }
 
 @Composable
-private fun StatItem(label: String, value: String, color: Color) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(value, color = color, fontSize = 28.sp, fontWeight = FontWeight.Bold)
-        Text(label, color = Color.White.copy(alpha = 0.8f), fontSize = 12.sp)
+private fun StatItem(
+    label: String,
+    value: String,
+    color: Color
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Text(
+            value,
+            color = color,
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Text(
+            label,
+            color = Color.White.copy(alpha = 0.8f),
+            fontSize = 12.sp
+        )
     }
 }
 
 @Composable
-private fun MenuCard(icon: ImageVector, title: String, subtitle: String, color: Color, modifier: Modifier = Modifier, onClick: () -> Unit) {
+private fun MenuCard(
+    icon: ImageVector,
+    title: String,
+    subtitle: String,
+    color: Color,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     Card(
-        modifier = modifier.height(110.dp).clickable(onClick = onClick),
-        colors = CardDefaults.cardColors(containerColor = color),
+        modifier = modifier
+            .height(110.dp)
+            .clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(
+            containerColor = color
+        ),
         shape = RoundedCornerShape(16.dp)
     ) {
-        Column(modifier = Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.SpaceBetween) {
-            Icon(icon, null, tint = Color.White, modifier = Modifier.size(28.dp))
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            Icon(
+                icon,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(28.dp)
+            )
+
             Column {
-                Text(title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
-                Text(subtitle, color = Color.White.copy(alpha = 0.8f), fontSize = 12.sp)
+
+                Text(
+                    title,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp
+                )
+
+                Text(
+                    subtitle,
+                    color = Color.White.copy(alpha = 0.8f),
+                    fontSize = 12.sp
+                )
             }
         }
     }
